@@ -72,6 +72,6 @@ object StepsRepository {
 
         val today = response[StepsRecord.COUNT_TOTAL] ?: 0L
 
-        return StepsState.Ready(today = today, goal = 10_000, updatedAt = LocalTime.now())
+        return StepsState.Ready(today = today, goal = Goal.get(context), updatedAt = LocalTime.now())
     }
 }

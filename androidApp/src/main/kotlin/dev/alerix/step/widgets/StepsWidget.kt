@@ -77,9 +77,11 @@ private fun Content(state: StepsState) {
 }
 
 private val BORDER = 8.dp
+
 @Composable
 private fun Steps(state: StepsState.Ready) {
     val ratio = (state.today.toFloat() / state.goal).coerceIn(0f, 1f)
+//    val ratio = 0.2f
 //    val label = TextStyle(color = GlanceTheme.colors.onSurface, fontSize = 12.sp, fontWeight = FontWeight.Medium)
 
     // Fill grows from the bottom. The outer corner radius clips it.
@@ -87,7 +89,7 @@ private fun Steps(state: StepsState.Ready) {
         Box(
             GlanceModifier
                 .fillMaxSize()
-                .background(GlanceTheme.colors.primaryContainer)
+                .background(GlanceTheme.colors.secondaryContainer)
                 .cornerRadius(android.R.dimen.system_app_widget_inner_radius),
             contentAlignment = Alignment.BottomCenter,
         ) {
@@ -97,14 +99,18 @@ private fun Steps(state: StepsState.Ready) {
                         .fillMaxWidth()
                         .height(LocalSize.current.height * ratio)
                         .cornerRadius(android.R.dimen.system_app_widget_inner_radius)
-                        .background(GlanceTheme.colors.primary)
+                        .background(GlanceTheme.colors.secondary)
                 ) {}
             }
             Image(
                 provider = ImageProvider(R.drawable.ic_steps),
                 contentDescription = null,
                 modifier = GlanceModifier.size(24.dp).padding(bottom = 10.dp),
-                colorFilter = ColorFilter.tint(GlanceTheme.colors.primaryContainer),
+                colorFilter =
+                    if (ratio < 0.2f)
+                        ColorFilter.tint(GlanceTheme.colors.secondary)
+                    else
+                        ColorFilter.tint(GlanceTheme.colors.secondaryContainer),
             )
 //    Column(
 //        GlanceModifier.fillMaxSize().padding(vertical = 10.dp),

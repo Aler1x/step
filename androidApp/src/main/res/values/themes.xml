@@ -1,0 +1,7 @@
+<resources>
+    <!-- Wallpaper neutral, close to the dynamic surface color in App, so the splash matches the first frame. -->
+    <style name="Theme.Step" parent="android:Theme.Material.Light.NoActionBar">
+        <item name="android:windowBackground">@android:color/system_neutral1_10</item>
+        <item name="android:windowSplashScreenBackground">@android:color/system_neutral1_10</item>
+    </style>
+</resources>
