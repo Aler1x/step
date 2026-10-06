@@ -1,6 +1,7 @@
 package dev.alerix.step.widgets
 
 import android.content.Context
+import android.icu.text.CompactDecimalFormat
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
@@ -10,6 +11,7 @@ import androidx.glance.GlanceModifier
 import androidx.glance.GlanceTheme
 import androidx.glance.Image
 import androidx.glance.ImageProvider
+import androidx.glance.LocalContext
 import androidx.glance.LocalSize
 import androidx.glance.action.ActionParameters
 import androidx.glance.appwidget.GlanceAppWidget
@@ -22,11 +24,16 @@ import androidx.glance.appwidget.updateAll
 import androidx.glance.background
 import androidx.glance.layout.Alignment
 import androidx.glance.layout.Box
+import androidx.glance.layout.Column
+import androidx.glance.layout.Spacer
 import androidx.glance.layout.fillMaxSize
 import androidx.glance.layout.fillMaxWidth
 import androidx.glance.layout.height
 import androidx.glance.layout.padding
 import androidx.glance.layout.size
+import androidx.glance.preview.ExperimentalGlancePreviewApi
+import androidx.glance.preview.Preview
+import androidx.glance.text.FontWeight
 import androidx.glance.text.Text
 import androidx.glance.text.TextAlign
 import androidx.glance.text.TextStyle
@@ -36,6 +43,7 @@ import androidx.work.PeriodicWorkRequestBuilder
 import androidx.work.WorkManager
 import androidx.work.WorkerParameters
 import dev.alerix.step.R
+import java.time.LocalTime
 import java.util.concurrent.TimeUnit
 
 class StepsWidget : GlanceAppWidget() {
@@ -82,7 +90,11 @@ private val BORDER = 8.dp
 private fun Steps(state: StepsState.Ready) {
     val ratio = (state.today.toFloat() / state.goal).coerceIn(0f, 1f)
 //    val ratio = 0.2f
-//    val label = TextStyle(color = GlanceTheme.colors.onSurface, fontSize = 12.sp, fontWeight = FontWeight.Medium)
+    val label = TextStyle(color = GlanceTheme.colors.onSurface, fontSize = 12.sp, fontWeight = FontWeight.Medium)
+    val compact = CompactDecimalFormat.getInstance(
+        LocalContext.current.resources.configuration.locales[0],
+        CompactDecimalFormat.CompactStyle.SHORT,
+    )
 
     // Fill grows from the bottom. The outer corner radius clips it.
     Box(GlanceModifier.fillMaxSize().padding(BORDER)) {
@@ -112,14 +124,13 @@ private fun Steps(state: StepsState.Ready) {
                     else
                         ColorFilter.tint(GlanceTheme.colors.secondaryContainer),
             )
-//    Column(
-//        GlanceModifier.fillMaxSize().padding(vertical = 10.dp),
-//        horizontalAlignment = Alignment.CenterHorizontally,
-//    ) {
-//        Text(state.goal.toString(), style = label, maxLines = 1)
-//        Spacer(GlanceModifier.defaultWeight())
-//        Text(state.today.toString(), style = label, maxLines = 1)
-//    }
+            Column(
+                GlanceModifier.fillMaxSize().padding(vertical = 10.dp),
+                horizontalAlignment = Alignment.CenterHorizontally,
+                verticalAlignment = Alignment.CenterVertically,
+            ) {
+                Text(compact.format(state.today), style = label, maxLines = 1)
+            }
         }
     }
 }
@@ -131,6 +142,15 @@ private fun Message(text: String) {
             text,
             style = TextStyle(color = GlanceTheme.colors.onSurface, fontSize = 11.sp, textAlign = TextAlign.Center),
         )
+    }
+}
+
+@OptIn(ExperimentalGlancePreviewApi::class)
+@Preview(widthDp = 50, heightDp = 90)
+@Composable
+private fun StepsPreview() {
+    GlanceTheme {
+        Content(StepsState.Ready(today = 6_400, goal = 10_000, updatedAt = LocalTime.NOON))
     }
 }
 
