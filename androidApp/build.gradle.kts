@@ -33,8 +33,8 @@ android {
         applicationId = "dev.alerix.step"
         minSdk = libs.versions.android.minSdk.get().toInt()
         targetSdk = libs.versions.android.targetSdk.get().toInt()
-        versionCode = 2
-        versionName = "1.3"
+        versionCode = 3
+        versionName = "1.4"
     }
     // Paths in keystore.properties resolve from the project root.
     val keystoreFile = rootProject.file("keystore.properties")

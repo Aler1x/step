@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <!-- System battery widget tones on accent1 (primary). -->
+    <color name="widget_steps_track">@android:color/system_accent1_50</color>
+    <color name="widget_steps_fill">@android:color/system_accent1_200</color>
+    <color name="widget_steps_text">@android:color/system_accent1_900</color>
+</resources>

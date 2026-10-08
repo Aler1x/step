@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <!-- Sampled from the system battery widget: track T10, fill T30 (primaryContainer), text T90. -->
+    <color name="widget_steps_track">@android:color/system_accent1_900</color>
+    <color name="widget_steps_fill">@android:color/system_accent1_700</color>
+    <color name="widget_steps_text">@android:color/system_accent1_100</color>
+</resources>

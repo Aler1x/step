@@ -1,5 +1,6 @@
 package dev.alerix.step.widgets
 
+import android.annotation.SuppressLint
 import android.content.Context
 import android.icu.text.CompactDecimalFormat
 import androidx.compose.runtime.Composable
@@ -38,6 +39,7 @@ import androidx.glance.text.FontWeight
 import androidx.glance.text.Text
 import androidx.glance.text.TextAlign
 import androidx.glance.text.TextStyle
+import androidx.glance.unit.ColorProvider
 import androidx.work.CoroutineWorker
 import androidx.work.ExistingPeriodicWorkPolicy
 import androidx.work.PeriodicWorkRequestBuilder
@@ -92,18 +94,21 @@ private val BORDER = 8.dp
 private fun Steps(state: StepsState.Ready) {
     val ratio = (state.today.toFloat() / state.goal).coerceIn(0f, 1f)
 //    val ratio = 0.2f
-    val label = TextStyle(color = GlanceTheme.colors.onSurface, fontSize = 12.sp, fontWeight = FontWeight.Medium)
+    @SuppressLint("RestrictedApi") // Launcher resolves the resource, so dynamic colors follow the wallpaper.
+    val textColor = ColorProvider(R.color.widget_steps_text)
+    val label = TextStyle(color = textColor, fontSize = 12.sp, fontWeight = FontWeight.Medium)
     val compact = CompactDecimalFormat.getInstance(
         LocalContext.current.resources.configuration.locales[0],
         CompactDecimalFormat.CompactStyle.SHORT,
     )
+    val barHeight = LocalSize.current.height - BORDER * 2
 
-    // Fill grows from the bottom. The outer corner radius clips it.
+    // Fill grows from the bottom. Rounded track clips the fill, so the fill keeps a straight top edge, like the system battery widget.
     Box(GlanceModifier.fillMaxSize().padding(BORDER)) {
         Box(
             GlanceModifier
                 .fillMaxSize()
-                .background(GlanceTheme.colors.secondaryContainer)
+                .background(R.color.widget_steps_track)
                 .cornerRadius(android.R.dimen.system_app_widget_inner_radius),
             contentAlignment = Alignment.BottomCenter,
         ) {
@@ -111,20 +116,15 @@ private fun Steps(state: StepsState.Ready) {
                 Box(
                     GlanceModifier
                         .fillMaxWidth()
-                        .height(LocalSize.current.height * ratio)
-                        .cornerRadius(android.R.dimen.system_app_widget_inner_radius)
-                        .background(GlanceTheme.colors.secondary)
+                        .height(barHeight * ratio)
+                        .background(R.color.widget_steps_fill)
                 ) {}
             }
             Image(
                 provider = ImageProvider(R.drawable.ic_steps),
                 contentDescription = null,
                 modifier = GlanceModifier.size(24.dp).padding(bottom = 10.dp),
-                colorFilter =
-                    if (ratio < 0.2f)
-                        ColorFilter.tint(GlanceTheme.colors.secondary)
-                    else
-                        ColorFilter.tint(GlanceTheme.colors.secondaryContainer),
+                colorFilter = ColorFilter.tint(textColor),
             )
             Column(
                 GlanceModifier.fillMaxSize().padding(vertical = 10.dp),
